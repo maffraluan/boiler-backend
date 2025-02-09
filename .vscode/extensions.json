@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "leizongmin.node-module-intellisense",
+    "oderwat.indent-rainbow",
+    "natqe.reload",
+    "gruntfuggly.todo-tree",
+    "kisstkondoros.vscode-codemetrics"
+  ]
+}

@@ -1,0 +1,29 @@
+services:
+  app:
+    container_name: boiler-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - API_VERSION=${API_VERSION}
+      - PORT=${PORT}
+      - PM2_EXEC_MODE=${EXEC_MODE}
+      - PM2_INSTANCES=${INSTANCES}
+      - PM2_USER=${PM2_USER}
+      - API_PORT=${PORT}
+      - PM2_NAME_APP=${PM2_NAME_APP}
+      - PM2_SCRIPT=${PM2_SCRIPT}
+      - PM2_WATCH=${PM2_WATCH}
+      - PM2_CWD=${PM2_CWD}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    ports:
+      - '${PORT}:${PORT}'
+    command: pm2-runtime pm2.config.js --no-daemon
