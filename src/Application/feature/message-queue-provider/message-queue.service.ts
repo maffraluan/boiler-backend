@@ -1,5 +1,5 @@
 import amqp from 'amqplib'
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable } from '../../../Infra/'
 import { MessageQueueConfig } from '../../config/message-queue.config'
 import { IMessageQueueService } from '../../interfaces/IMessageQueueService'
 import { Either, isError, isSuccess } from '../../shared/adapters/either/either.adapter'

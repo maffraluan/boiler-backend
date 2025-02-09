@@ -1,4 +1,4 @@
-import { container } from 'tsyringe'
+import { container } from '../../../Infra/'
 import { CarModule } from '../../feature/car-provider/car.module'
 import { LogService } from '../../feature/logs-provider/log.service'
 import { MessageQueueModule } from '../../feature/message-queue-provider/message-queue.module'

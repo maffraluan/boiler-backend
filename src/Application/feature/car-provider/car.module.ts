@@ -1,4 +1,4 @@
-import { container, DependencyContainer, injectable } from 'tsyringe'
+import { container, injectable, type DependencyContainer } from '../../../Infra'
 import { BaseModule } from '../../shared/module/base.module'
 import { WebhookModule } from '../webhook-provider/webhook.module'
 import { CarConsumerService } from './car-consumer.service'

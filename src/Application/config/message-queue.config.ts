@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe'
+import { injectable } from '../../Infra'
 
 @injectable()
 export class MessageQueueConfig {

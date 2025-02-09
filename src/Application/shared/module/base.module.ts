@@ -1,4 +1,4 @@
-import { DependencyContainer } from 'tsyringe'
+import { type DependencyContainer } from '../../../Infra/'
 import { Module } from './module.interface'
 
 export abstract class BaseModule implements Module {

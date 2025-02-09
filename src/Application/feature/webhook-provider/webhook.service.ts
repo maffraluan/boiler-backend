@@ -1,5 +1,4 @@
-import { inject, injectable } from 'tsyringe'
-
+import { injectable } from '../../../Infra/'
 import { IWebhookService } from '../../interfaces/IWebhookService'
 import { IAxiosRequest } from '../../shared/adapters/axios/axios-adapter'
 import { Either, isError, isSuccess } from '../../shared/adapters/either/either.adapter'
@@ -7,7 +6,7 @@ import { Exception } from '../../shared/errors/error-handlers'
 
 @injectable()
 export class WebhookService implements IWebhookService {
-  constructor(@inject('AxiosRequest') private readonly axiosRequest: IAxiosRequest) {}
+  constructor(private readonly axiosRequest: IAxiosRequest) {}
   private readonly webhookUrl = process.env.WEBHOOK_URL || 'http://localhost:3001/webhook'
 
   async notifyCarCreated(carId: string): Promise<Either<Exception, void>> {

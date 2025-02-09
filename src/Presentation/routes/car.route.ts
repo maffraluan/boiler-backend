@@ -1,15 +1,13 @@
-import { container } from 'tsyringe'
 import { CarModule } from '../../Application/feature/car-provider/car.module'
 import { BaseRoutes } from './base.route'
 
 export class CarRoute extends BaseRoutes {
-  private readonly carModule: CarModule
-
   constructor() {
     super()
-    this.carModule = container.resolve('CarModule')
     this.registerRoutes()
   }
+
+  private readonly carModule = this.resolverModule<CarModule>('CarModule')
 
   override registerRoutes(): void {
     // Get routes from module configuration

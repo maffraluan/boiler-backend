@@ -1,5 +1,5 @@
 import { Collection, InsertOneResult, MongoClient } from 'mongodb'
-import { injectable } from 'tsyringe'
+import { injectable } from '../../../Infra'
 import { ILogService, Log } from '../../interfaces/ILogService'
 import { Either, isError, isSuccess } from '../../shared/adapters/either/either.adapter'
 import { Exception } from '../../shared/errors/error-handlers'

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable } from '../../../Infra'
 import { ILogService } from '../../interfaces/ILogService'
 import { IMessageQueueService } from '../../interfaces/IMessageQueueService'
 import { IWebhookService } from '../../interfaces/IWebhookService'

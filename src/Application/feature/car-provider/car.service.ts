@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe'
+import { injectable } from '../../../Infra'
 import { Car, ICarService } from '../../interfaces/ICarService'
 import { IAxiosRequest } from '../../shared/adapters/axios/axios-adapter'
 import { Either, isError, isSuccess } from '../../shared/adapters/either/either.adapter'

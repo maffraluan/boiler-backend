@@ -1,4 +1,4 @@
-import { DependencyContainer } from 'tsyringe'
+import { DependencyContainer } from '../../../Infra/'
 import { MessageQueueConfig } from '../../config/message-queue.config'
 import { IMessageQueueService } from '../../interfaces/IMessageQueueService'
 import { Module } from '../../shared/module/module.interface'

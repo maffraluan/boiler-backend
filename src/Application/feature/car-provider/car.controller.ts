@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable } from '../../../Infra'
 import { httpSuccess } from '../../../Presentation/presenters'
 import { ICarService } from '../../interfaces/ICarService'
 import { ILogService } from '../../interfaces/ILogService'
