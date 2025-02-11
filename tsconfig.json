@@ -1,50 +1,50 @@
 {
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.js"
-  ],
-  "exclude": [
-    "./node_modules",
-    "dist"
-  ],
-  "compilerOptions": {
-    "strictPropertyInitialization": false,
-    "experimentalDecorators": true,
-    "target": "ES2019",
-    "moduleResolution": "node",
-    "module": "commonjs",
-    "lib": [
-      "es2019",
-      "ES5",
-      "ES6"
-    ],
-    "sourceMap": true,
-    "paths": {
-      "@test/*": [
-        "./test/*"
-      ]
-    },
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitThis": true,
-    "resolveJsonModule": true,
-    "alwaysStrict": true,
-    "removeComments": true,
-    "noImplicitReturns": false,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "types": [
-      "node",
-      "jest",
-      "@types/jest"
-    ],
-    "rootDirs": [
-      "./"
-    ],
-    "emitDecoratorMetadata": true
-  }
+	"include": [
+		"./src/**/*.ts",
+		"./src/**/*.js"
+	],
+	"exclude": [
+		"./node_modules",
+		"dist"
+	],
+	"compilerOptions": {
+		"strictPropertyInitialization": false,
+		"experimentalDecorators": true,
+		"target": "ES2019",
+		"moduleResolution": "node",
+		"module": "commonjs",
+		"lib": [
+			"es2019",
+			"ES5",
+			"ES6"
+		],
+		"sourceMap": true,
+		"paths": {
+			"@test/*": [
+				"./test/*"
+			]
+		},
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"noImplicitThis": true,
+		"resolveJsonModule": true,
+		"alwaysStrict": true,
+		"removeComments": true,
+		"noImplicitReturns": false,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"types": [
+			"node",
+			"jest",
+			"@types/jest"
+		],
+		"rootDirs": [
+			"./"
+		],
+		"emitDecoratorMetadata": true,
+	}
 }
