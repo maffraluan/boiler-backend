@@ -26,4 +26,3 @@ services:
       - .env
     ports:
       - '${PORT}:${PORT}'
-    command: pm2-runtime pm2.config.js --no-daemon
