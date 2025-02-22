@@ -1,77 +1,79 @@
-import { getMetadataArgsStorage } from 'routing-controllers'
-import * as dependencyInjection from '../../../Infra/'
-import { Module, ModuleRouteConfig, type Providers } from './module.interface'
+import * as dependencyInjection from '../../../Infra'
 
-export type RouteConfig = ModuleRouteConfig
-export type Singletons = Array<[string, dependencyInjection.InjectionToken]>
+export type Constructor<T = any> = new (...args: any[]) => T
+export type FactoryFunction<T> = (container: dependencyInjection.DependencyContainer) => T
+export type Registration<T> = Constructor<T> | { useFactory: FactoryFunction<T> }
+export type Singletons = Array<[Constructor<any>, Registration<any>]>
 
-export abstract class BaseModule implements Module {
-	imports: Module[] = []
-	providers: Providers = []
-	exports: string[] = []
-	protected externalDependencies: string[] = []
+export abstract class BaseModule {
+	protected container: dependencyInjection.DependencyContainer
 
-	register(container: dependencyInjection.DependencyContainer): void {
-		this.externalDependencies.forEach((dep) => {
-			if (!container.isRegistered(dep)) {
-				throw new Error(`External dependency ${dep} is not registered in the container`)
-			}
-		})
-
-		// Register dependencies from imported modules first
-		this.imports.forEach((ImportedModule) => {
-			ImportedModule.register(container)
-		})
-
-		// Register module's own providers
-		this.providers.forEach((Provider) => {
-			container.register(Provider.name, Provider)
-		})
-	}
-
-	resolveProviders(container: dependencyInjection.DependencyContainer): void {
-		this.providers.forEach((Provider) => {
-			container.resolve(Provider)
-		})
+	constructor() {
+		this.container = dependencyInjection.container
 	}
 
 	protected registerSingletons(container: dependencyInjection.DependencyContainer, singletons: Singletons): void {
-		singletons.forEach(([token, provider]) => {
-			container.registerSingleton(token, provider)
-		})
-	}
+		singletons.forEach(([token, registration]) => {
+			try {
+				const tokenName = this.getTokenName(token)
+				console.log(`🔧 Registering singleton: ${tokenName}`)
 
-	resolveController<T>(token: string): T {
-		return dependencyInjection.container.resolve(token)
-	}
-
-	protected getRoutesForController<T>(ControllerClass: { new (...args: any[]): T }): RouteConfig[] {
-		const storage = getMetadataArgsStorage()
-
-		const ctrlMeta = storage.controllers.find((ctrl) => ctrl.target === ControllerClass)
-		if (!ctrlMeta) {
-			return []
-		}
-
-		const basePath = ctrlMeta.route || ''
-		const actions = storage.actions.filter((action) => action.target === ControllerClass)
-
-		const routeConfigs = actions.map((action) => {
-			const methodLower = action.type.toLowerCase()
-			const fullPath = basePath + (action.route || '')
-			return {
-				path: fullPath,
-				method: methodLower as 'get' | 'post' | 'put' | 'delete' | 'patch',
-				handler: action.method,
+				if (!container.isRegistered(token)) {
+					if (this.isFactory(registration)) {
+						container.register(token, {
+							useFactory: (container) => registration.useFactory(container),
+						})
+					} else {
+						container.registerSingleton(token, registration)
+					}
+					console.log(`✅ Successfully registered: ${tokenName}`)
+				} else {
+					console.log(`⚠️ Singleton already registered: ${tokenName}`)
+				}
+			} catch (error) {
+				console.error(`❌ Failed to register singleton:`, error)
+				throw error
 			}
 		})
-
-		return routeConfigs
 	}
 
-	getExports(): string[] {
-		return this.exports
+	private isFactory(registration: Registration<any>): registration is { useFactory: FactoryFunction<any> } {
+		return typeof registration === 'object' && 'useFactory' in registration
 	}
+
+	private getTokenName(token: dependencyInjection.InjectionToken): string {
+		if (typeof token === 'string') {
+			return token
+		}
+		if (typeof token === 'function') {
+			return token.name
+		}
+		if (typeof token === 'symbol') {
+			return token.toString()
+		}
+		return String(token)
+	}
+
+	protected resolveModule<T>(token: dependencyInjection.InjectionToken<T>): T {
+		try {
+			return this.container.resolve<T>(token)
+		} catch (error) {
+			console.error(`❌ Failed to resolve module ${this.getTokenName(token)}:`, error)
+			throw error
+		}
+	}
+
+	protected resolveController<T>(token: dependencyInjection.InjectionToken<T>): T {
+		try {
+			return this.container.resolve<T>(token)
+		} catch (error) {
+			console.error(`❌ Failed to resolve controller ${this.getTokenName(token)}:`, error)
+			throw error
+		}
+	}
+
+	abstract register(container: dependencyInjection.DependencyContainer): void
+	abstract getController(): any
 }
 
 export { dependencyInjection }

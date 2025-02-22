@@ -1,57 +1,42 @@
-import { BaseModule, dependencyInjection, RouteConfig, type Singletons } from '../../shared/module/base.module'
-import { MessageQueueModule } from '../message-queue-provider/message-queue.module'
-import { WebhookModule } from '../webhook-provider/webhook.module'
-import { CarConsumerService } from './car-consumer.service'
+import { IAxiosRequest } from '../../shared'
+import { BaseModule, dependencyInjection, type Singletons } from '../../shared/module/base.module'
 import { CarController } from './car.controller'
-import { CarEntity } from './car.entity'
 import { CarRepository } from './car.repository'
 import { CarService } from './car.service'
 
+const BASE_URL = 'http://api-test.bhut.com.br:3000/api/v1'
+
 @dependencyInjection.injectable()
 export class CarModule extends BaseModule {
-	constructor() {
-		super()
-		this.imports = [new WebhookModule(), new MessageQueueModule()]
-		this.providers = [CarService, CarRepository]
-		this.exports = ['CarService', 'CarController']
-		this.externalDependencies = ['AxiosRequest']
-	}
+	private readonly singletons: Singletons = [
+		[CarRepository, CarRepository],
+		[
+			CarService,
+			{
+				useFactory: (container: dependencyInjection.DependencyContainer) => {
+					const axiosRequest = container.resolve<IAxiosRequest>('AxiosRequest')
+					const repository = container.resolve(CarRepository)
 
-	BASE_URL = 'http://api-test.bhut.com.br:3000/api/v1'
-
-	private singletons: Singletons = [
-		['CarModule', CarModule],
-		['CarConsumerService', CarConsumerService],
-		['CarController', CarController],
-	]
-
-	register(container: dependencyInjection.DependencyContainer): void {
-		super.register(container)
-
-		container.register('CarEntity', {
-			useValue: new CarEntity(),
-		})
-
-		container.register('CarRepository', {
-			useFactory: (c) => {
-				return new CarRepository(c.resolve('CarEntity'))
+					return new CarService(axiosRequest, BASE_URL, repository)
+				},
 			},
-		})
-
-		container.register('CarService', {
-			useFactory: (c) => {
-				return new CarService(c.resolve('AxiosRequest'), this.BASE_URL, c.resolve('CarRepository'))
+		],
+		[
+			CarController,
+			{
+				useFactory: (container: dependencyInjection.DependencyContainer) => {
+					const service = container.resolve(CarService)
+					return new CarController(service)
+				},
 			},
-		})
+		],
+	] as const
 
+	public register(container: dependencyInjection.DependencyContainer): void {
 		this.registerSingletons(container, this.singletons)
 	}
 
-	getRoutes(): RouteConfig[] {
-		return this.getRoutesForController(CarController)
-	}
-
-	getController(): CarController {
-		return this.resolveController<CarController>('CarController')
+	public getController(): CarController {
+		return this.resolveController<CarController>(CarController)
 	}
 }

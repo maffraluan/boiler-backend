@@ -1,22 +1,35 @@
 import 'reflect-metadata'
+import { createExpressServer, useContainer } from 'routing-controllers'
+import { container } from 'tsyringe'
+import { ContainerManager } from './Application/shared/containers/containers'
+
+import { TsyringeAdapter } from './Application/shared'
 import { getEnvValue } from './Application/shared/utils/get-env-variable'
+import { setupMiddlewares } from './Presentation/middlewares/setup.middleware'
+import { CarController } from './Presentation/routes'
 import SetupServer from './server'
 
-export default class App {
-  public static async start(): Promise<SetupServer> {
-    // Connect to services
-    // await messageQueue.connect()
-    // await logService.connect()
+// Start the first instance of the container
+ContainerManager.getInstance()
 
-    // Start consumer
-    // await carConsumer.start()
+// Setup adapter for tsyringe routing-controllers
+useContainer(new TsyringeAdapter(container))
 
-    return SetupServer.getInstance().init({
-      apiName: getEnvValue(process.env.PM2_NAME_APP),
-      logEnabled: true,
-      port: getEnvValue(process.env.PORT),
-    })
-  }
-}
+const app = createExpressServer({
+	controllers: [CarController],
+	routePrefix: getEnvValue(process.env.API_VERSION),
+	defaultErrorHandler: true,
+	development: true,
+	validation: false,
+	cors: true,
+	classTransformer: true,
+	interceptors: [],
+	middlewares: [setupMiddlewares],
+})
 
-App.start()
+SetupServer.getInstance().init({
+	apiName: getEnvValue(process.env.APP_NAME),
+	logEnabled: true,
+	port: getEnvValue(process.env.PORT),
+	app,
+})
