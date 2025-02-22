@@ -4,11 +4,11 @@ import { AppNextFunction } from '../../Application/shared/adapters/express/app-n
 import { calcOffSet } from '../../Application/shared/utils/pagination.helper'
 
 export const calcOffsetMiddleware = (req: AppRequest, _: AppResponse, next: AppNextFunction) => {
-  const params = req?.query
+	const params = req?.query
 
-  const offset = calcOffSet(params)
+	const offset = calcOffSet(params)
 
-  req.query.offset = offset.toString()
+	req.query.offset = offset.toString()
 
-  next()
+	next()
 }

@@ -1,3 +1,3 @@
 export const getEnvValue = (input?: string): string => {
-  return input || ''
+	return input || ''
 }
