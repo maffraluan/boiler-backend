@@ -7,6 +7,8 @@
 		"build": "tsc -p tsconfig.json",
 		"dev": "ts-node-dev --transpile-only src/app.ts",
 		"test": "jest --colors --coverage a",
+		"format": "prettier --write \"src/**/*.{ts,js,json}\"",
+		"format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
 		"prepare": "if [ -d .git ]; then chmod ug+x .git/hooks/pre-push; fi",
 		"reload:pm2": "pm2 reload all",
 		"prisma:generate": "prisma generate",
