@@ -1,6 +1,6 @@
 export * from './adapters'
 export * from './containers/containers'
 export * from './decorators'
-export * from './errors/error-handlers'
+export * from './errors'
 export * from './module'
 export * from './status-code/http-status-code'
