@@ -1,37 +1,29 @@
-import { injectable } from '../../../Infra'
+import * as dependencyInjection from '../../../Infra'
 import { Car, ICarService } from '../../interfaces/ICarService'
-import { IAxiosRequest } from '../../shared/adapters/axios/axios-adapter'
-import { Either, isError, isSuccess } from '../../shared/adapters/either/either.adapter'
-import { Exception } from '../../shared/errors/error-handlers'
+import { AxiosHttpAdapter, Either, Exception, isError, isSuccess } from '../../shared'
 import { ICarEntity } from './car.entity'
 
-@injectable()
+@dependencyInjection.injectable()
 export class CarService implements ICarService {
 	constructor(
-		private readonly axiosRequest: IAxiosRequest,
+		private readonly httpAdapter: AxiosHttpAdapter,
 		private readonly baseUrl: string,
 		private readonly carRepository: ICarEntity
 	) {}
 
-	async getAllCars(): Promise<Either<Exception, Car[]>> {
-		const response = await this.axiosRequest<Either<Exception, Car[]>>({
+	async getAllComments(): Promise<Either<Exception, Car[]>> {
+		const { data } = await this.httpAdapter<{ data: Car[] }>({
 			method: 'GET',
-			url: `${this.baseUrl}/carro`,
-			headers: {
-				'Content-Type': 'application/json',
-			},
+			url: `${this.baseUrl}/comments`,
 		})
 
-		if (response.isError()) {
-			return isError(new Exception(response.value.message, response.value.statusCode))
-		}
-		return isSuccess(response.value)
+		return isSuccess(data)
 	}
 
 	async createCar(car: Car): Promise<Either<Exception, Car>> {
-		const response = await this.axiosRequest<Either<Exception, Car>>({
+		const response = await this.httpAdapter<Either<Exception, Car>>({
 			method: 'POST',
-			url: `${this.baseUrl}/carro`,
+			url: `${this.baseUrl}/`,
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -45,19 +37,8 @@ export class CarService implements ICarService {
 	}
 
 	async healthCheckCar(): Promise<Either<Exception, { message: string }>> {
-		// const response = await this.axiosRequest<Either<Exception, { message: string }>>({
-		//   method: 'GET',
-		//   url: `${this.baseUrl}/health-check`,
-		//   headers: {
-		//     'Content-Type': 'application/json',
-		//   },
-		// })
-
 		const repository = await this.carRepository.findAll()
-
-		console.log('repository >>>>>', repository)
-
-		console.log('this.baseUrssdsdsl >>>>>', this.baseUrl)
+		console.info('Repository', repository)
 
 		return isSuccess({ message: 'OK' })
 	}

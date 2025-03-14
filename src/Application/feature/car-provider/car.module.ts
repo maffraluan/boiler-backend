@@ -1,10 +1,10 @@
-import { IAxiosRequest } from '../../shared'
+import { AxiosHttpAdapter } from '../../shared'
 import { BaseModule, dependencyInjection, type Singletons } from '../../shared/module/base.module'
 import { CarController } from './car.controller'
 import { CarRepository } from './car.repository'
 import { CarService } from './car.service'
 
-const BASE_URL = 'http://api-test.bhut.com.br:3000/api/v1'
+const BASE_URL = 'https://jsonplaceholder.typicode.com'
 
 @dependencyInjection.injectable()
 export class CarModule extends BaseModule {
@@ -14,10 +14,10 @@ export class CarModule extends BaseModule {
 			CarService,
 			{
 				useFactory: (container: dependencyInjection.DependencyContainer) => {
-					const axiosRequest = container.resolve<IAxiosRequest>('AxiosRequest')
+					const httpAdapter = container.resolve<AxiosHttpAdapter>('AxiosRequest')
 					const repository = container.resolve(CarRepository)
 
-					return new CarService(axiosRequest, BASE_URL, repository)
+					return new CarService(httpAdapter, BASE_URL, repository)
 				},
 			},
 		],

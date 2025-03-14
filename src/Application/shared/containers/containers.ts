@@ -2,12 +2,12 @@ import { container } from '../../../Infra/'
 
 import { CarModule } from '../../feature/car-provider/car.module'
 
-import { axiosRequest, IAxiosRequest } from '../adapters/axios/axios-adapter'
+import { AxiosHttpAdapter, axiosHttpAdapter } from '../adapters/axios/axios-http.adapter'
 import { BaseModule } from '../module'
 import { ModuleManager } from '../module/module.manager'
 
 // Register shared services
-container.register<IAxiosRequest>('AxiosRequest', { useValue: axiosRequest })
+container.register<AxiosHttpAdapter>('AxiosRequest', { useValue: axiosHttpAdapter })
 
 type ModuleConstructor = new () => BaseModule
 
@@ -31,12 +31,7 @@ export class ContainerManager {
 	private registerModules(): void {
 		console.log('📦 Registering modules in container...')
 
-		// Lista de módulos da aplicação
-		const modules: Array<[string, ModuleConstructor]> = [
-			['car', CarModule], // Usando nome mais simples
-		]
-
-		// Registra cada módulo
+		const modules: Array<[string, ModuleConstructor]> = [['car', CarModule]]
 		modules.forEach(([name, ModuleClass]) => {
 			this.registerModule(name, new ModuleClass())
 		})
@@ -47,13 +42,10 @@ export class ContainerManager {
 	private registerModule(name: string, module: BaseModule): void {
 		console.log(`📝 Registering module: ${name}`)
 
-		// Registra no container
 		module.register(container)
 
-		// Adiciona ao map local
 		this.modules.set(name, module)
 
-		// Adiciona ao ModuleManager para routing
 		this.moduleManager.addModule(name, module)
 
 		console.log(`✅ Module ${name} registered successfully`)
