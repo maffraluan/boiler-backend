@@ -17,8 +17,6 @@ Boiler-Backend
 - [API Endpoints](#api-endpoints)
 - [Architecture](#architecture)
 - [Development Workflow](#development-workflow)
-- [Error Handling](#error-handling)
-- [Logging](#logging)
 - [Development](#development)
 - [Deployment](#deployment)
 
@@ -112,7 +110,7 @@ GET     /api/v1/health-check       # Check API status
 ### Project Structure
 
 ```
-positions_api/
+boiler_backend/
 ├── src/
 │   ├── Application/     # Application logic, use cases
 │   │   ├── shared/     # Shared utilities
@@ -167,23 +165,6 @@ positions_api/
 6. Merge to `develop` after approval
 7. Deploy to staging for QA
 8. Release to production via `main` branch
-
-## Error Handling
-
-Status codes:
-
-- 200: Success
-- 400: Bad Request
-- 401: Unauthorized
-- 403: Forbidden
-- 404: Not Found
-- 409: Conflict
-- 422: Unprocessable Entity
-- 500: Internal Server Error
-
-## Logging
-
-Application logs are stored in PostgreSQL using the `application_log` table.
 
 ## Development
 
